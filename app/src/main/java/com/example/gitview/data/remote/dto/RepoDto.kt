@@ -1,12 +1,15 @@
 package com.example.gitview.data.remote.dto
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class SearchResponse(
     @Json(name = "total_count") val totalCount: Int,
     @Json(name = "items") val items: List<RepoDto>
 )
 
+@JsonClass(generateAdapter = true)
 data class RepoDto(
     val id: Long,
     val name: String,
@@ -20,6 +23,7 @@ data class RepoDto(
     val owner: OwnerDto
 )
 
+@JsonClass(generateAdapter = true)
 data class OwnerDto(
     val login: String,
     @Json(name = "avatar_url") val avatarUrl: String
