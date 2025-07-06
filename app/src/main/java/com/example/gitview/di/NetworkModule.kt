@@ -1,9 +1,9 @@
 package com.example.gitview.di
 
 import com.example.gitview.core.util.API_URL
-import com.example.gitview.data.remote.GithubApi
-import com.example.gitview.data.repository.GitRepositoryImpl
-import com.example.gitview.domain.repository.GithubRepository
+import com.example.gitview.data.remote.GitHubApi
+import com.example.gitview.data.repository.GitHubRepositoryImpl
+import com.example.gitview.domain.repository.GitHubRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Binds
@@ -22,8 +22,8 @@ import kotlin.jvm.java
 abstract class RepositoryModule {
     @Binds
     abstract fun bindGitHubRepository(
-        impl: GitRepositoryImpl
-    ): GithubRepository
+        impl: GitHubRepositoryImpl
+    ): GitHubRepository
 }
 
 @Module
@@ -51,6 +51,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideGitHubApi(retrofit: Retrofit): GithubApi =
-        retrofit.create(GithubApi::class.java)
+    fun provideGitHubApi(retrofit: Retrofit): GitHubApi =
+        retrofit.create(GitHubApi::class.java)
 }

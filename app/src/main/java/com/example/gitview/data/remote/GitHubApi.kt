@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface GithubApi {
+interface GitHubApi {
     @GET("search/repositories")
     suspend fun searchRepositories(
         @Query("q") query: String,
