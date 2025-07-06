@@ -1,5 +1,6 @@
 package com.example.gitview.di
 
+import com.example.gitview.core.util.API_URL
 import com.example.gitview.data.remote.GithubApi
 import com.example.gitview.data.repository.GitRepositoryImpl
 import com.example.gitview.domain.repository.GithubRepository
@@ -43,7 +44,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(client: OkHttpClient, moshi: Moshi): Retrofit =
         Retrofit.Builder()
-            .baseUrl("https://api.github.com/")
+            .baseUrl(API_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(client)
             .build()
