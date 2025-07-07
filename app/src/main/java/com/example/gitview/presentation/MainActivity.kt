@@ -44,16 +44,14 @@ fun GitViewApp() {
                 }
 
                 // DETAIL – owner ve repo adı argümanlı
-                composable(
-                    route = "detail/{owner}/{repo}",
-                    arguments = listOf(
-                        navArgument("owner") { type = NavType.StringType },
-                        navArgument("repo")  { type = NavType.StringType }
+                composable("detail/{owner}/{repo}") { backStackEntry ->
+                    val owner = backStackEntry.arguments?.getString("owner") ?: ""
+                    val repo = backStackEntry.arguments?.getString("repo") ?: ""
+                    RepoDetailScreen(
+                        navController = navController,
+                        owner = owner,
+                        repo = repo
                     )
-                ) { backStackEntry ->
-                    val owner = backStackEntry.arguments!!.getString("owner")!!
-                    val repo  = backStackEntry.arguments!!.getString("repo")!!
-                    RepoDetailScreen(owner = owner, repo = repo)
                 }
             }
         }

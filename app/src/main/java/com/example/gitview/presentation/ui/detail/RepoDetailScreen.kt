@@ -11,15 +11,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.CallSplit
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,19 +36,42 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.gitview.domain.model.Repo
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RepoDetailScreen(
+    navController: NavController,
     owner: String,
     repo: String,
     viewModel: RepoDetailViewModel = hiltViewModel()
 ) {
     LaunchedEffect(owner, repo) { viewModel.load(owner, repo) }
-    when (val state = viewModel.uiState.collectAsState().value) {
-        is DetailUiState.Loading -> DetailLoading()
-        is DetailUiState.Error -> DetailError(state.message) { viewModel.load(owner, repo) }
-        is DetailUiState.Success -> DetailContent(state.repo)
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("$owner/$repo") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Geri")
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)) {
+
+            when (val state = viewModel.uiState.collectAsState().value) {
+                is DetailUiState.Loading -> DetailLoading()
+                is DetailUiState.Error -> DetailError(state.message) { viewModel.load(owner, repo) }
+                is DetailUiState.Success -> DetailContent(state.repo)
+            }
+        }
     }
 }
 
@@ -63,8 +92,12 @@ private fun DetailError(msg: String, onRetry: () -> Unit) = Column(
 }
 
 @Composable
-private fun DetailContent(repo: com.example.gitview.domain.model.Repo) {
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
+private fun DetailContent(repo: Repo) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             AsyncImage(
                 model = repo.ownerAvatarUrl,
