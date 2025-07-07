@@ -1,6 +1,7 @@
 package com.example.gitview.di
 
 import com.example.gitview.core.util.API_URL
+import com.example.gitview.core.util.GITHUB_TOKEN
 import com.example.gitview.data.remote.GitHubApi
 import com.example.gitview.data.repository.GitHubRepositoryImpl
 import com.example.gitview.domain.repository.GitHubRepository
@@ -31,7 +32,15 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttp(): OkHttpClient = OkHttpClient.Builder().build()
+    fun provideOkHttp(): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val newRequest = chain.request().newBuilder()
+                    .addHeader("Authorization", "token $GITHUB_TOKEN")
+                    .build()
+                chain.proceed(newRequest)
+            }
+            .build()
 
     @Provides
     @Singleton
