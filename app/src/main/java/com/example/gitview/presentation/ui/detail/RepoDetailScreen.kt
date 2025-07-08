@@ -1,5 +1,6 @@
 package com.example.gitview.presentation.ui.detail
 
+import android.webkit.WebView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,13 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.CallSplit
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,16 +28,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.gitview.domain.model.Repo
+import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +50,9 @@ fun RepoDetailScreen(
     repo: String,
     viewModel: RepoDetailViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(owner, repo) { viewModel.load(owner, repo) }
+    LaunchedEffect(owner, repo) {
+        viewModel.load(owner, repo)
+    }
 
     Scaffold(
         topBar = {
@@ -62,10 +66,11 @@ fun RepoDetailScreen(
             )
         }
     ) { padding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)) {
-
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
             when (val state = viewModel.uiState.collectAsState().value) {
                 is DetailUiState.Loading -> DetailLoading()
                 is DetailUiState.Error -> DetailError(state.message) { viewModel.load(owner, repo) }
@@ -77,8 +82,11 @@ fun RepoDetailScreen(
 
 @Composable
 private fun DetailLoading() = Box(
-    Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-) { CircularProgressIndicator() }
+    Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center
+) {
+    CircularProgressIndicator()
+}
 
 @Composable
 private fun DetailError(msg: String, onRetry: () -> Unit) = Column(
@@ -88,7 +96,9 @@ private fun DetailError(msg: String, onRetry: () -> Unit) = Column(
 ) {
     Text(msg)
     Spacer(Modifier.height(8.dp))
-    Button(onClick = onRetry) { Text("Tekrar Dene") }
+    Button(onClick = onRetry) {
+        Text("Tekrar Dene")
+    }
 }
 
 @Composable
@@ -98,6 +108,7 @@ private fun DetailContent(repo: Repo) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        // Üst kısım
         Row(verticalAlignment = Alignment.CenterVertically) {
             AsyncImage(
                 model = repo.ownerAvatarUrl,
@@ -113,8 +124,10 @@ private fun DetailContent(repo: Repo) {
                 }
             }
         }
+
         Spacer(Modifier.height(16.dp))
         Text(repo.description ?: "(No description)", style = MaterialTheme.typography.bodyMedium)
+
         Spacer(Modifier.height(16.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Default.Star, contentDescription = null, tint = Color(0xFFFFD700))
@@ -125,15 +138,25 @@ private fun DetailContent(repo: Repo) {
             Spacer(Modifier.width(4.dp))
             Text(repo.forks.toString())
         }
+
         Spacer(Modifier.height(24.dp))
-        HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
+        HorizontalDivider()
         Spacer(Modifier.height(16.dp))
-        Text("README Özet (yakında AI)", style = MaterialTheme.typography.titleMedium)
-        Text(
-            text = "README içeriği henüz çekilmedi. AI özeti eklenecek.",
-            maxLines = 8,
-            overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.bodySmall
-        )
+
+        // README
+        Text("README", style = MaterialTheme.typography.titleMedium)
+
+        Spacer(Modifier.height(8.dp))
+
+        if (repo.readme.content.isNotBlank()) {
+
+            MarkdownText(markdown = repo.readme.content)
+
+        } else {
+            Text(
+                "README içeriği bulunamadı.",
+                style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
+            )
+        }
     }
 }

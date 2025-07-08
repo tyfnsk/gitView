@@ -11,5 +11,6 @@ data class Repo(
     val issues: Int,
     val htmlUrl: String,
     val ownerName: String,
-    val ownerAvatarUrl: String
+    val ownerAvatarUrl: String,
+    val readme: Readme = Readme("(Did not Load)", "", "")
 )

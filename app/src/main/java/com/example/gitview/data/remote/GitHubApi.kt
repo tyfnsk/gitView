@@ -1,5 +1,6 @@
 package com.example.gitview.data.remote
 
+import com.example.gitview.data.remote.dto.ReadmeDto
 import com.example.gitview.data.remote.dto.RepoDto
 import com.example.gitview.data.remote.dto.SearchResponse
 import retrofit2.http.GET
@@ -20,4 +21,10 @@ interface GitHubApi {
         @Path("owner") owner: String,
         @Path("repo") repo: String
     ): RepoDto
+
+    @GET("repos/{owner}/{repo}/readme")
+    suspend fun getReadme(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): ReadmeDto
 }

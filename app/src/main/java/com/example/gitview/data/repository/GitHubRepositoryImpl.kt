@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.example.gitview.data.mapper.toDomain
 import com.example.gitview.data.paging.RepoPagingSource
 import com.example.gitview.data.remote.GitHubApi
+import com.example.gitview.domain.model.Readme
 import com.example.gitview.domain.model.Repo
 import com.example.gitview.domain.repository.GitHubRepository
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +22,10 @@ class GitHubRepositoryImpl @Inject constructor(
 
     override suspend fun getRepo(owner: String, repo: String): Repo =
         api.getRepository(owner, repo).toDomain()
+
+    override suspend fun getReadme(owner: String, repo: String): Readme {
+        return api.getReadme(owner, repo).toDomain()
+    }
 
     // paged flow
     override fun searchReposPaging(query: String): Flow<PagingData<Repo>> =
