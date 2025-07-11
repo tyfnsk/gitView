@@ -23,6 +23,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 import kotlin.jvm.java
 import com.example.gitview.BuildConfig
+import com.example.gitview.data.local.dao.SummaryDao
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -112,6 +113,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOpenAiRepository(api: OpenAiApi): OpenAiRepository =
-        OpenAiRepositoryImpl(api)
+    fun provideOpenAiRepository(api: OpenAiApi,summaryDao: SummaryDao): OpenAiRepository =
+        OpenAiRepositoryImpl(api, summaryDao)
 }

@@ -19,6 +19,7 @@ moshiKotlin = "1.15.2"
 moshiKotlinCodegen = "1.15.2"
 pagingRuntime = "3.3.6"
 retrofitVersion = "2.9.0"
+room = "2.6.1"
 
 
 
@@ -52,6 +53,9 @@ moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiKotlin" }
 moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiKotlinCodegen" }
 retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx     = { group = "androidx.room", name = "room-ktx",     version.ref = "room" }
+room-compiler= { group = "androidx.room", name = "room-compiler",version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

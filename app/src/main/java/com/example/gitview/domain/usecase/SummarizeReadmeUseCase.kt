@@ -6,7 +6,7 @@ import javax.inject.Inject
 class SummarizeReadmeUseCase @Inject constructor(
     private val repository: OpenAiRepository
 ) {
-    suspend operator fun invoke(content: String): String {
-        return repository.summarize(content)
+    suspend operator fun invoke(content: String, repoId: String): String {
+        return repository.summarize(content, repoId)
     }
 }

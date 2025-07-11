@@ -76,7 +76,6 @@ fun RepoDetailScreen(
         viewModel.load(owner, repo)
     }
 
-    // AI Summary tab selected → trigger fetch
     LaunchedEffect(selectedTabIndex) {
         if (selectedTabIndex == 1) {
             viewModel.summarizeReadmeIfNeeded()
@@ -125,7 +124,7 @@ fun RepoDetailScreen(
 
 @Composable
 private fun DetailLoading() = Box(
-    Modifier.fillMaxSize(),
+    modifier = Modifier.fillMaxSize(),
     contentAlignment = Alignment.Center
 ) {
     CircularProgressIndicator()
@@ -133,7 +132,7 @@ private fun DetailLoading() = Box(
 
 @Composable
 private fun DetailError(msg: String, onRetry: () -> Unit) = Column(
-    Modifier.fillMaxSize(),
+    modifier = Modifier.fillMaxSize(),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center
 ) {
@@ -160,12 +159,13 @@ private fun DetailContent(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Repo Info
+        // Header
         Row(verticalAlignment = Alignment.CenterVertically) {
             AsyncImage(
                 model = repo.ownerAvatarUrl,
                 contentDescription = null,
-                modifier = Modifier.size(72.dp)
+                modifier = Modifier.size(72.dp),
+                contentScale = ContentScale.Crop
             )
             Spacer(Modifier.width(16.dp))
             Column {
@@ -206,6 +206,7 @@ private fun DetailContent(
         HorizontalDivider()
         Spacer(Modifier.height(16.dp))
 
+        // Tabs
         TabRow(selectedTabIndex = selectedTabIndex) {
             tabs.forEachIndexed { index, title ->
                 Tab(

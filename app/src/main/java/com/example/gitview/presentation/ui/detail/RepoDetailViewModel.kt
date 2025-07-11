@@ -52,21 +52,20 @@ class RepoDetailViewModel @Inject constructor(
             if (currentState.summary != null || currentState.isSummaryLoading) return
 
             val readmeContent = currentState.repo.readme.content
+            val repoId = currentState.repo.fullName // örnek: "tyfnsk/gitview"
             if (readmeContent.isBlank()) return
 
-            // Özet yükleniyor işaretle
             _uiState.update {
                 currentState.copy(isSummaryLoading = true)
             }
 
             viewModelScope.launch {
                 try {
-                    val summary = summarizeReadme(readmeContent)
+                    val summary = summarizeReadme(readmeContent, repoId)
                     _uiState.update {
                         currentState.copy(summary = summary, isSummaryLoading = false)
                     }
                 } catch (e: Exception) {
-                    // Hata olursa sadece yükleme durumunu kapat
                     _uiState.update {
                         currentState.copy(isSummaryLoading = false)
                     }
