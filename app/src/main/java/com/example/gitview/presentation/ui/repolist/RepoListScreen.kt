@@ -1,5 +1,6 @@
-package com.example.gitview.presentation.ui.home
+package com.example.gitview.presentation.ui.repolist
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -24,9 +25,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
@@ -34,6 +38,10 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.example.gitview.domain.model.Repo
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.focus.FocusRequesterModifier
 
 
 @Composable
@@ -67,20 +75,58 @@ fun ModernSearchBar(query: String, onQueryChange: (String) -> Unit) {
     var active by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    SearchBar(
-        query = query,
-        onQueryChange = onQueryChange,
-        onSearch = { active = false },
-        active = active,
-        onActiveChange = { active = it },
-        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-        placeholder = { Text("Search repositories…") },
-        shape = RoundedCornerShape(24.dp),
-        tonalElevation = 8.dp,
+    // FocusRequester tanımlanır
+    val focusRequester = remember { FocusRequester() }
+
+    // Ekran açıldığında focus'u ver
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 12.dp)
-    ) {}
+            .background(
+                Brush.horizontalGradient(
+                    colors = listOf(Color(0xFF00C6AE), Color(0xFF5BCEFA))
+                ),
+                shape = RoundedCornerShape(
+                    topStart = 0.dp,
+                    topEnd = 0.dp,
+                    bottomStart = 30.dp,
+                    bottomEnd = 30.dp
+                )
+            )
+            .padding(20.dp, 50.dp, 20.dp, 0.dp)
+            .height(150.dp)
+    ) {
+        Text(
+            text = "Git Repos",
+            color = Color.White,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        OutlinedTextField(
+            value = query,
+            onValueChange = onQueryChange,
+            placeholder = { Text("Search repositories…", color = Color.White) },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null,tint = Color.White) },
+            textStyle = LocalTextStyle.current.copy(color = Color.White),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp, 60.dp, 16.dp, 0.dp)
+                .focusRequester(focusRequester),
+            shape = RoundedCornerShape(24.dp),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.White,
+                focusedIndicatorColor = Color.White,
+                cursorColor = Color.White
+            )
+        )
+    }
 }
 
 /*--------------------------------------------------------*/

@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.CallSplit
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CallSplit
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -72,10 +73,12 @@ fun RepoDetailScreen(
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
 
+    // Repository detaylarını yükle
     LaunchedEffect(owner, repo) {
         viewModel.load(owner, repo)
     }
 
+    // AI summary tetikleme
     LaunchedEffect(selectedTabIndex) {
         if (selectedTabIndex == 1) {
             viewModel.summarizeReadmeIfNeeded()
@@ -83,6 +86,8 @@ fun RepoDetailScreen(
     }
 
     val state by viewModel.uiState.collectAsState()
+    // Favori durumunu izlemek için state
+    val isFavorite by viewModel.isFavorite.collectAsState()
 
     Scaffold(
         topBar = {
@@ -106,7 +111,6 @@ fun RepoDetailScreen(
                 is DetailUiState.Error -> DetailError((state as DetailUiState.Error).message) {
                     viewModel.load(owner, repo)
                 }
-
                 is DetailUiState.Success -> {
                     val success = state as DetailUiState.Success
                     DetailContent(
@@ -114,7 +118,12 @@ fun RepoDetailScreen(
                         summary = success.summary,
                         isSummaryLoading = success.isSummaryLoading,
                         selectedTabIndex = selectedTabIndex,
-                        onTabChange = { selectedTabIndex = it }
+                        onTabChange = { selectedTabIndex = it },
+                        isFavorite = isFavorite,
+                        onFavoriteClick = {
+                            if (isFavorite) viewModel.removeFromFavorites(success.repo)
+                            else viewModel.addToFavorites(success.repo)
+                        }
                     )
                 }
             }
@@ -149,7 +158,9 @@ private fun DetailContent(
     summary: String?,
     isSummaryLoading: Boolean,
     selectedTabIndex: Int,
-    onTabChange: (Int) -> Unit
+    onTabChange: (Int) -> Unit,
+    isFavorite: Boolean,
+    onFavoriteClick: () -> Unit
 ) {
     val tabs = listOf("README", "AI Summary")
     val context = LocalContext.current
@@ -159,7 +170,7 @@ private fun DetailContent(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Header
+        // Header bölümünde repo bilgileri ve favori ikonu
         Row(verticalAlignment = Alignment.CenterVertically) {
             AsyncImage(
                 model = repo.ownerAvatarUrl,
@@ -169,7 +180,17 @@ private fun DetailContent(
             )
             Spacer(Modifier.width(16.dp))
             Column {
-                Text(repo.fullName, style = MaterialTheme.typography.headlineSmall)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(repo.fullName, style = MaterialTheme.typography.headlineSmall)
+                    Spacer(Modifier.width(8.dp))
+                    IconButton(onClick = { onFavoriteClick() }) {
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "Favorite",
+                            tint = if (isFavorite) Color(0xFFFFD700) else Color.Gray
+                        )
+                    }
+                }
                 repo.language?.let {
                     Text(it, style = MaterialTheme.typography.labelMedium)
                 }
@@ -185,7 +206,7 @@ private fun DetailContent(
             Spacer(Modifier.width(4.dp))
             Text(repo.stars.toString())
             Spacer(Modifier.width(16.dp))
-            Icon(Icons.AutoMirrored.Filled.CallSplit, contentDescription = null)
+            Icon(Icons.Filled.CallSplit, contentDescription = null)
             Spacer(Modifier.width(4.dp))
             Text(repo.forks.toString())
             Spacer(Modifier.width(16.dp))
@@ -194,7 +215,8 @@ private fun DetailContent(
                     val intent = Intent(Intent.ACTION_VIEW, repo.htmlUrl.toUri())
                     context.startActivity(intent)
                 },
-                modifier = Modifier.defaultMinSize(minHeight = 35.dp, minWidth = 0.dp)
+                modifier = Modifier
+                    .defaultMinSize(minHeight = 35.dp)
             ) {
                 Icon(Icons.Default.Public, contentDescription = "Open in browser")
                 Spacer(Modifier.width(4.dp))
@@ -206,7 +228,7 @@ private fun DetailContent(
         HorizontalDivider()
         Spacer(Modifier.height(16.dp))
 
-        // Tabs
+        // Tab Row
         TabRow(selectedTabIndex = selectedTabIndex) {
             tabs.forEachIndexed { index, title ->
                 Tab(
@@ -219,7 +241,7 @@ private fun DetailContent(
 
         Spacer(Modifier.height(8.dp))
 
-        // Tab content
+        // Tab içeriği
         when (selectedTabIndex) {
             0 -> {
                 if (repo.readme.content.isNotBlank()) {
@@ -231,7 +253,6 @@ private fun DetailContent(
                     )
                 }
             }
-
             1 -> {
                 when {
                     isSummaryLoading -> Box(
@@ -240,11 +261,9 @@ private fun DetailContent(
                     ) {
                         CircularProgressIndicator()
                     }
-
                     !summary.isNullOrBlank() -> {
                         Text(summary, style = MaterialTheme.typography.bodySmall)
                     }
-
                     else -> {
                         Text(
                             "AI summary not available.",

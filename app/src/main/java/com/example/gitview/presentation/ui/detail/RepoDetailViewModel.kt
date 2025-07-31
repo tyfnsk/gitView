@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gitview.domain.model.Readme
 import com.example.gitview.domain.model.Repo
+import com.example.gitview.domain.usecase.FavoriteRepoUseCase
 import com.example.gitview.domain.usecase.GetReadmeUseCase
 import com.example.gitview.domain.usecase.GetRepoDetailUseCase
 import com.example.gitview.domain.usecase.SummarizeReadmeUseCase
@@ -19,11 +20,15 @@ import javax.inject.Inject
 class RepoDetailViewModel @Inject constructor(
     private val getRepoDetail: GetRepoDetailUseCase,
     private val getReadme: GetReadmeUseCase,
-    private val summarizeReadme: SummarizeReadmeUseCase
+    private val summarizeReadme: SummarizeReadmeUseCase,
+    private val favoriteUseCase: FavoriteRepoUseCase // ✅ favori işlemleri eklendi
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
     val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
+
+    private val _isFavorite = MutableStateFlow(false)
+    val isFavorite: StateFlow<Boolean> = _isFavorite
 
     fun load(owner: String, repo: String) {
         _uiState.value = DetailUiState.Loading
@@ -38,6 +43,10 @@ class RepoDetailViewModel @Inject constructor(
                     summary = null,
                     isSummaryLoading = false
                 )
+
+                // ✅ Favori durumu kontrolü
+                _isFavorite.value = favoriteUseCase.isFavorite(combined)
+
             } catch (e: Exception) {
                 _uiState.value = DetailUiState.Error(
                     e.localizedMessage ?: "Beklenmeyen hata"
@@ -71,6 +80,22 @@ class RepoDetailViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    // ✅ Yeni: Favoriye ekle
+    fun addToFavorites(repo: Repo) {
+        viewModelScope.launch {
+            favoriteUseCase.addToFavorites(repo)
+            _isFavorite.value = true
+        }
+    }
+
+    // ✅ Yeni: Favoriden çıkar
+    fun removeFromFavorites(repo: Repo) {
+        viewModelScope.launch {
+            favoriteUseCase.removeFromFavorites(repo)
+            _isFavorite.value = false
         }
     }
 }

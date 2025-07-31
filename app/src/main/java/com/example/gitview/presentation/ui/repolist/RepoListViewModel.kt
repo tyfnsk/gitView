@@ -1,4 +1,4 @@
-package com.example.gitview.presentation.ui.home
+package com.example.gitview.presentation.ui.repolist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,6 +7,8 @@ import androidx.paging.cachedIn
 import com.example.gitview.domain.model.Repo
 import com.example.gitview.domain.usecase.SearchReposPagingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,6 +26,7 @@ class RepoListViewModel @Inject constructor(
     private val _query = MutableStateFlow("android")
     val query: StateFlow<String> = _query.asStateFlow()
 
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val repos: Flow<PagingData<Repo>> = _query
         .debounce(300) // Küçük gecikme, hızlı yazarken istekleri azaltır
         .distinctUntilChanged()

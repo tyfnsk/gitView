@@ -2,7 +2,9 @@ package com.example.gitview.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.gitview.data.local.dao.FavoriteDao
 import com.example.gitview.data.local.dao.SummaryDao
+import com.example.gitview.data.local.db.FavoriteDatabase
 import com.example.gitview.data.local.db.SummaryDatabase
 import dagger.Module
 import dagger.Provides
@@ -30,4 +32,20 @@ object LocalModule {
     fun provideSummaryDao(database: SummaryDatabase): SummaryDao {
         return database.summaryDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteDatabase(@ApplicationContext context: Context): FavoriteDatabase {
+        return Room.databaseBuilder(
+            context,
+            FavoriteDatabase::class.java,
+            "favorite_database"
+        ).build()
+    }
+
+    @Provides
+    fun provideFavoriteDao(db: FavoriteDatabase): FavoriteDao {
+        return db.favoriteDao()
+    }
+
 }

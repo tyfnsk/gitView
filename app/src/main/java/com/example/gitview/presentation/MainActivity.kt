@@ -9,13 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.gitview.presentation.ui.detail.RepoDetailScreen
-import com.example.gitview.presentation.ui.home.RepoListScreen
+import com.example.gitview.presentation.ui.home.HomeScreen
+import com.example.gitview.presentation.ui.repolist.RepoListScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,7 +39,12 @@ fun GitViewApp() {
 
                 // HOME – repo listesi
                 composable("home") {
-                    RepoListScreen(navController)   // navController’ı geçiriyoruz
+                    //RepoListScreen(navController)   // navController’ı geçiriyoruz
+                    HomeScreen(navController)
+                }
+
+                composable("repolist") {
+                    RepoListScreen(navController)
                 }
 
                 // DETAIL – owner ve repo adı argümanlı
