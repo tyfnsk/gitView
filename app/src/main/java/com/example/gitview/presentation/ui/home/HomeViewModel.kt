@@ -1,12 +1,16 @@
 package com.example.gitview.presentation.ui.home
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Android
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.gitview.R
 import com.example.gitview.domain.model.Repo
 import com.example.gitview.domain.usecase.FavoriteRepoUseCase
 import com.example.gitview.domain.usecase.SearchReposPagingUseCase
+import com.example.gitview.presentation.ui.category.CategoryItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -32,19 +36,81 @@ class HomeViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    init {
-        loadFavorites()
-    }
+    private val _categories = MutableStateFlow<List<CategoryItem>>(emptyList())
+    val categories: StateFlow<List<CategoryItem>> = _categories
 
     private val _query = MutableStateFlow("android")
     val query: StateFlow<String> = _query.asStateFlow()
+
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val repos: Flow<PagingData<Repo>> = _query
-        .debounce(300) // Küçük gecikme, hızlı yazarken istekleri azaltır
+        .debounce(300)
         .distinctUntilChanged()
         .flatMapLatest { q ->
             searchPaging(q).cachedIn(viewModelScope)
         }
+
+    init {
+        loadFavorites()
+        loadCategories()
+    }
+
+    private fun loadCategories() {
+        _categories.value = listOf(
+            CategoryItem(
+                name = "Android",
+                languages = listOf("kotlin", "java"),
+                iconRes = R.drawable.android_logo, // kendi ikonlarını eklemelisin
+                repoCount = 0
+            ),
+            CategoryItem(
+                name = "iOS",
+                languages = listOf("swift", "objective-c"),
+                iconRes = R.drawable.ios_logo,
+                repoCount = 0
+            ),
+            CategoryItem(
+                name = "Web",
+                languages = listOf("javascript", "typescript", "html", "css"),
+                iconRes = R.drawable.web_logo,
+                repoCount = 0
+            ),
+            CategoryItem(
+                name = "Backend",
+                languages = listOf("c#", "go", "rust", "php"),
+                iconRes = R.drawable.backend_logo,
+                repoCount = 0
+            ),
+            CategoryItem(
+                name = "AI/ML",
+                languages = listOf("python"),
+                iconRes = R.drawable.ai_logo,
+                repoCount = 0
+            ),
+            CategoryItem(
+                name = "DevOps",
+                languages = listOf("docker"),
+                iconRes = R.drawable.devops_logo,
+                repoCount = 0
+            ),
+            CategoryItem(
+                name = "System",
+                languages = listOf("c++", "c"),
+                iconRes = R.drawable.system_logo,
+                repoCount = 0
+            ),
+            CategoryItem(
+                name = "Others",
+                languages = emptyList(),
+                iconRes = R.drawable.git_logo,
+                repoCount = 0
+            )
+        )
+    }
+
+    fun setQuery(newQuery: String) {
+        _query.value = newQuery
+    }
 
     fun loadFavorites() {
         viewModelScope.launch {

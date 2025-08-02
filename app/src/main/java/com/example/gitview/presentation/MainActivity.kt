@@ -43,8 +43,12 @@ fun GitViewApp() {
                     HomeScreen(navController)
                 }
 
-                composable("repolist") {
+                /*composable("repolist") {
                     RepoListScreen(navController)
+                }*/
+                composable("repolist/{query}") { backStackEntry ->
+                    val query = backStackEntry.arguments?.getString("query") ?: ""
+                    RepoListScreen(navController = navController, initialQuery = query)
                 }
 
                 // DETAIL – owner ve repo adı argümanlı

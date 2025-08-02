@@ -47,13 +47,26 @@ import androidx.compose.ui.focus.FocusRequesterModifier
 @Composable
 fun RepoListScreen(
     navController: NavController,
+    initialQuery: String,
     viewModel: RepoListViewModel = hiltViewModel()
 ) {
     val query by viewModel.query.collectAsState()
     val pagingItems = viewModel.repos.collectAsLazyPagingItems()
 
+    LaunchedEffect(Unit) {
+        if (initialQuery.isNotBlank()) {
+            viewModel.search(initialQuery)
+        }
+    }
+
     Column(Modifier.fillMaxSize()) {
-        ModernSearchBar(query, onQueryChange = viewModel::search)
+
+        val isQueryTechnical = query.contains("language:") || query.contains("stars:") || query.contains("android")
+        ModernSearchBar(
+            query = if (isQueryTechnical) "" else query,
+            onQueryChange = viewModel::search
+        )
+        //ModernSearchBar(query, onQueryChange = viewModel::search)
 
         when (pagingItems.loadState.refresh) {
             is LoadState.Loading -> FullScreenLoading()

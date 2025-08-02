@@ -49,9 +49,10 @@ import com.example.gitview.presentation.ui.repolist.LoadingIndicator
 fun FavoriteRepo(
     navController: NavController,
     favoriteRepos: List<Repo>,
-    isLoading: Boolean
+    isLoading: Boolean,
+    modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(modifier = modifier) {
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
         } else {
