@@ -2,7 +2,6 @@ package com.example.gitview.presentation.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gitview.domain.model.Readme
 import com.example.gitview.domain.model.Repo
 import com.example.gitview.domain.usecase.FavoriteRepoUseCase
 import com.example.gitview.domain.usecase.GetReadmeUseCase
@@ -21,7 +20,7 @@ class RepoDetailViewModel @Inject constructor(
     private val getRepoDetail: GetRepoDetailUseCase,
     private val getReadme: GetReadmeUseCase,
     private val summarizeReadme: SummarizeReadmeUseCase,
-    private val favoriteUseCase: FavoriteRepoUseCase // ✅ favori işlemleri eklendi
+    private val favoriteUseCase: FavoriteRepoUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
@@ -44,7 +43,6 @@ class RepoDetailViewModel @Inject constructor(
                     isSummaryLoading = false
                 )
 
-                // ✅ Favori durumu kontrolü
                 _isFavorite.value = favoriteUseCase.isFavorite(combined)
 
             } catch (e: Exception) {
@@ -61,7 +59,7 @@ class RepoDetailViewModel @Inject constructor(
             if (currentState.summary != null || currentState.isSummaryLoading) return
 
             val readmeContent = currentState.repo.readme.content
-            val repoId = currentState.repo.fullName // örnek: "tyfnsk/gitview"
+            val repoId = currentState.repo.fullName
             if (readmeContent.isBlank()) return
 
             _uiState.update {
@@ -83,7 +81,6 @@ class RepoDetailViewModel @Inject constructor(
         }
     }
 
-    // ✅ Yeni: Favoriye ekle
     fun addToFavorites(repo: Repo) {
         viewModelScope.launch {
             favoriteUseCase.addToFavorites(repo)
@@ -91,7 +88,6 @@ class RepoDetailViewModel @Inject constructor(
         }
     }
 
-    // ✅ Yeni: Favoriden çıkar
     fun removeFromFavorites(repo: Repo) {
         viewModelScope.launch {
             favoriteUseCase.removeFromFavorites(repo)

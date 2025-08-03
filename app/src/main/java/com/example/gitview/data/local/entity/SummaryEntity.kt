@@ -5,6 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "summaries")
 data class SummaryEntity(
-    @PrimaryKey val repoFullName: String, // örn. "octocat/Hello-World"
+    @PrimaryKey val repoFullName: String,
     val summary: String
 )

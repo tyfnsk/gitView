@@ -1,26 +1,20 @@
 package com.example.gitview.presentation.ui.detail
 
 import android.content.Intent
-import android.net.Uri
-import android.webkit.WebView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSizeIn
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.CallSplit
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CallSplit
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Star
@@ -28,7 +22,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,7 +31,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -51,10 +43,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -73,12 +63,12 @@ fun RepoDetailScreen(
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
 
-    // Repository detaylarını yükle
+    // Load repository details
     LaunchedEffect(owner, repo) {
         viewModel.load(owner, repo)
     }
 
-    // AI summary tetikleme
+    // trigger AI summary if tab is changed
     LaunchedEffect(selectedTabIndex) {
         if (selectedTabIndex == 1) {
             viewModel.summarizeReadmeIfNeeded()
@@ -86,7 +76,7 @@ fun RepoDetailScreen(
     }
 
     val state by viewModel.uiState.collectAsState()
-    // Favori durumunu izlemek için state
+    // Following status of state of favorite button
     val isFavorite by viewModel.isFavorite.collectAsState()
 
     Scaffold(
@@ -170,7 +160,7 @@ private fun DetailContent(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Header bölümünde repo bilgileri ve favori ikonu
+        // favorite icon and repo details
         Row(verticalAlignment = Alignment.CenterVertically) {
             AsyncImage(
                 model = repo.ownerAvatarUrl,
@@ -179,11 +169,20 @@ private fun DetailContent(
                 contentScale = ContentScale.Crop
             )
             Spacer(Modifier.width(16.dp))
-            Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(repo.fullName, style = MaterialTheme.typography.headlineSmall)
-                    Spacer(Modifier.width(8.dp))
-                    IconButton(onClick = { onFavoriteClick() }) {
+            Column(modifier = Modifier.weight(1f)) {
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = repo.fullName,
+                        style = MaterialTheme.typography.headlineSmall,
+                        maxLines = 1,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(end = 48.dp)
+                    )
+                    IconButton(
+                        onClick = onFavoriteClick,
+                        modifier = Modifier.align(Alignment.CenterEnd)
+                    ) {
                         Icon(
                             imageVector = Icons.Default.Star,
                             contentDescription = "Favorite",
@@ -215,8 +214,7 @@ private fun DetailContent(
                     val intent = Intent(Intent.ACTION_VIEW, repo.htmlUrl.toUri())
                     context.startActivity(intent)
                 },
-                modifier = Modifier
-                    .defaultMinSize(minHeight = 35.dp)
+                modifier = Modifier.defaultMinSize(minHeight = 35.dp)
             ) {
                 Icon(Icons.Default.Public, contentDescription = "Open in browser")
                 Spacer(Modifier.width(4.dp))
@@ -241,7 +239,7 @@ private fun DetailContent(
 
         Spacer(Modifier.height(8.dp))
 
-        // Tab içeriği
+        // Tab content
         when (selectedTabIndex) {
             0 -> {
                 if (repo.readme.content.isNotBlank()) {
@@ -262,7 +260,7 @@ private fun DetailContent(
                         CircularProgressIndicator()
                     }
                     !summary.isNullOrBlank() -> {
-                        Text(summary, style = MaterialTheme.typography.bodySmall)
+                        Text(summary, style = MaterialTheme.typography.bodyLarge)
                     }
                     else -> {
                         Text(

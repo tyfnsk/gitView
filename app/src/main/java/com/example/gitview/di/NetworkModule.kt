@@ -2,7 +2,6 @@ package com.example.gitview.di
 
 import android.util.Log
 import com.example.gitview.core.util.API_URL
-import com.example.gitview.core.util.GITHUB_TOKEN
 import com.example.gitview.data.remote.GitHubApi
 import com.example.gitview.data.remote.OpenAiApi
 import com.example.gitview.data.repository.GitHubRepositoryImpl
@@ -51,7 +50,7 @@ object NetworkModule {
         OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val newRequest = chain.request().newBuilder()
-                    .addHeader("Authorization", "token $GITHUB_TOKEN")
+                    .addHeader("Authorization", "token ${BuildConfig.GITHUB_TOKEN}")
                     .build()
                 chain.proceed(newRequest)
             }

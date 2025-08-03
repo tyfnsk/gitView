@@ -18,10 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +38,6 @@ import com.example.gitview.domain.model.Repo
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.focus.FocusRequesterModifier
 
 
 @Composable
@@ -66,7 +62,6 @@ fun RepoListScreen(
             query = if (isQueryTechnical) "" else query,
             onQueryChange = viewModel::search
         )
-        //ModernSearchBar(query, onQueryChange = viewModel::search)
 
         when (pagingItems.loadState.refresh) {
             is LoadState.Loading -> FullScreenLoading()
@@ -79,19 +74,15 @@ fun RepoListScreen(
     }
 }
 
-/*--------------------------------------------------------*/
-/*  Modern SearchBar (Material3)                          */
-/*--------------------------------------------------------*/
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModernSearchBar(query: String, onQueryChange: (String) -> Unit) {
-    var active by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
 
-    // FocusRequester tanımlanır
+    // FocusRequester define
     val focusRequester = remember { FocusRequester() }
 
-    // Ekran açıldığında focus'u ver
+    // give focus when screen open
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
@@ -142,9 +133,6 @@ fun ModernSearchBar(query: String, onQueryChange: (String) -> Unit) {
     }
 }
 
-/*--------------------------------------------------------*/
-/*  List content                                          */
-/*--------------------------------------------------------*/
 @Composable
 private fun RepoListContent(
     navController: NavController,
@@ -172,9 +160,7 @@ private fun RepoListContent(
     }
 }
 
-/*--------------------------------------------------------*/
-/*  Repo card                                             */
-/*--------------------------------------------------------*/
+
 @Composable
 fun RepoListItem(
     repo: Repo,
@@ -219,9 +205,6 @@ fun RepoListItem(
     }
 }
 
-/*--------------------------------------------------------*/
-/*  Loading & Error helpers                               */
-/*--------------------------------------------------------*/
 @Composable
 fun FullScreenLoading() = Box(
     Modifier.fillMaxSize(), contentAlignment = Alignment.Center
@@ -241,5 +224,5 @@ fun ErrorView(msg: String, onRetry: () -> Unit) = Column(
 ) {
     Text(msg)
     Spacer(Modifier.height(8.dp))
-    Button(onClick = onRetry) { Text("Yeniden Dene") }
+    Button(onClick = onRetry) { Text("Try Again") }
 }

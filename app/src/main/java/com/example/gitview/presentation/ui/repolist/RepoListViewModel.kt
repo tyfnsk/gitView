@@ -28,7 +28,7 @@ class RepoListViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val repos: Flow<PagingData<Repo>> = _query
-        .debounce(300) // Küçük gecikme, hızlı yazarken istekleri azaltır
+        .debounce(300) // delay for decrease requests
         .distinctUntilChanged()
         .flatMapLatest { q ->
             searchPaging(q).cachedIn(viewModelScope)

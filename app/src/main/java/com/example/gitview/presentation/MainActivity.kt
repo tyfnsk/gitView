@@ -37,21 +37,15 @@ fun GitViewApp() {
                 startDestination = "home"
             ) {
 
-                // HOME – repo listesi
                 composable("home") {
-                    //RepoListScreen(navController)   // navController’ı geçiriyoruz
                     HomeScreen(navController)
                 }
 
-                /*composable("repolist") {
-                    RepoListScreen(navController)
-                }*/
                 composable("repolist/{query}") { backStackEntry ->
                     val query = backStackEntry.arguments?.getString("query") ?: ""
                     RepoListScreen(navController = navController, initialQuery = query)
                 }
 
-                // DETAIL – owner ve repo adı argümanlı
                 composable("detail/{owner}/{repo}") { backStackEntry ->
                     val owner = backStackEntry.arguments?.getString("owner") ?: ""
                     val repo = backStackEntry.arguments?.getString("repo") ?: ""

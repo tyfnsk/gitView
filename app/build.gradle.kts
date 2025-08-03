@@ -15,6 +15,7 @@ val localProperties = Properties().apply {
 }
 
 val openAiKey = localProperties.getProperty("OPENAI_API_KEY") ?: "MISSING_API_KEY"
+val githubToken = localProperties.getProperty("GITHUB_TOKEN") ?: "MISSING_TOKEN"
 
 
 android {
@@ -28,6 +29,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
+        buildConfigField("String", "GITHUB_TOKEN", "\"$githubToken\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

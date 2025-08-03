@@ -61,7 +61,7 @@ fun CategoryCard(
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier
             .background(Color(0xFFEAEAEA))
-            .height(160.dp) // Biraz yüksek ama repo sayısı kalktı
+            .height(160.dp)
             .fillMaxWidth()
             .clickable { onClick() }
     ) {
@@ -100,7 +100,7 @@ fun CategoryCard(
                         painter = painterResource(id = iconRes),
                         contentDescription = language,
                         modifier = Modifier
-                            .size(28.dp) // BÜYÜTÜLDÜ
+                            .size(28.dp)
                             .padding(horizontal = 6.dp)
                     )
                 }

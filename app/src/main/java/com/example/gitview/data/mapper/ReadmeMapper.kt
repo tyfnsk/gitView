@@ -10,7 +10,7 @@ fun ReadmeDto.toDomain(): Readme {
         val decodedBytes = Base64.decode(content ?: "", Base64.DEFAULT)
         String(decodedBytes, StandardCharsets.UTF_8)
     } catch (e: Exception) {
-        "(README çözümlenemedi)"
+        "(README couldn't be decoded)"
     }
 
     return Readme(

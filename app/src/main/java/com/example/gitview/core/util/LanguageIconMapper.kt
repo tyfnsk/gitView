@@ -20,6 +20,6 @@ fun getLanguageIcon(language: String): Int {
         "docker" -> R.drawable.docker
         "swift" -> R.drawable.swift
         "objective-c" -> R.drawable.objective_c
-        else -> R.drawable.ic_launcher_foreground // yedek ikon
+        else -> R.drawable.ic_launcher_foreground
     }
 }

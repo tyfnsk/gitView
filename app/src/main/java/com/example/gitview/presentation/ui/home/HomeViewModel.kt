@@ -1,7 +1,5 @@
 package com.example.gitview.presentation.ui.home
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Android
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -60,7 +58,7 @@ class HomeViewModel @Inject constructor(
             CategoryItem(
                 name = "Android",
                 languages = listOf("kotlin", "java"),
-                iconRes = R.drawable.android_logo, // kendi ikonlarını eklemelisin
+                iconRes = R.drawable.android_logo,
                 repoCount = 0
             ),
             CategoryItem(
