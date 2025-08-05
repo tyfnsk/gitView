@@ -21,18 +21,18 @@ It is built with **Jetpack Compose**, follows **MVVM** and **Clean Architecture*
 | Home Screen | Repo List Screen |
 |-------------|------------------|
 
-<p align="center">
-  <img src="https://github.com/tyfnsk/gitView/blob/master/screenshots/gitview-main-screen.jpg?raw=true" alt="GitView Main Screen">
-  <img src="https://github.com/tyfnsk/gitView/blob/master/screenshots/gitview-list-screen.jpg?raw=true" alt="GitView List Screen">
+<p align="left">
+  <img src="https://raw.githubusercontent.com/tyfnsk/gitView/refs/heads/main/screenshots/gitview-main-screen.JPG" alt="GitView Main Screen">
+  <img src="https://github.com/tyfnsk/gitView/blob/main/screenshots/gitview-list-screen.JPG" alt="GitView List Screen">
 </p>
 
 
 | Repo Detail Screen | AI Summary Screen |
 |--------------------|-------------------|
 
-<p align="center">
-  <img src="https://github.com/tyfnsk/gitView/blob/master/screenshots/gitview-detail-screen.jpg?raw=true" alt="GitView Detail Screen">
-  <img src="https://github.com/tyfnsk/gitView/blob/master/screenshots/gitview-aisummary-screen.jpg?raw=true" alt="GitView AISummary Screen">
+<p align="left">
+  <img src="https://raw.githubusercontent.com/tyfnsk/gitView/refs/heads/main/screenshots/gitview-detail-screen.JPG" alt="GitView Detail Screen">
+  <img src="https://raw.githubusercontent.com/tyfnsk/gitView/refs/heads/main/screenshots/gitview-aisummary-screen.JPG" alt="GitView AISummary Screen">
 </p>
 
 ---
