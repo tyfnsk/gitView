@@ -20,11 +20,20 @@ It is built with **Jetpack Compose**, follows **MVVM** and **Clean Architecture*
 
 | Home Screen | Repo List Screen |
 |-------------|------------------|
-| ![Home](screenshots/gitview-main-screen.jpg) | ![RepoList](screenshots/gitview-list-screen.jpg) |
+
+<p align="center">
+  <img src="https://github.com/tyfnsk/gitView/blob/master/screenshots/gitview-main-screen.jpg?raw=true" alt="GitView Main Screen">
+  <img src="https://github.com/tyfnsk/gitView/blob/master/screenshots/gitview-list-screen.jpg?raw=true" alt="GitView List Screen">
+</p>
+
 
 | Repo Detail Screen | AI Summary Screen |
 |--------------------|-------------------|
-| ![Detail](screenshots/gitview-detail-screen.jpg) | ![AI](screenshots/gitview-aisummary-screen.jpg) |
+
+<p align="center">
+  <img src="https://github.com/tyfnsk/gitView/blob/master/screenshots/gitview-detail-screen.jpg?raw=true" alt="GitView Detail Screen">
+  <img src="https://github.com/tyfnsk/gitView/blob/master/screenshots/gitview-aisummary-screen.jpg?raw=true" alt="GitView AISummary Screen">
+</p>
 
 ---
 
