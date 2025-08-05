@@ -113,8 +113,7 @@ Special thanks to the following tools and services:
 
 - [OpenAI](https://openai.com/)
 - [GitHub REST API](https://docs.github.com/en/rest)
-- [Jetpack Compose](https://developer.android.com/jetpack/compose)
 
 ---
 
-> Developed with ❤️ by [@tyfnsk](https://github.com/tyfnsk)
+> Developed with ❤️ by [@tyfnsk](https://tayfunisik.com)
